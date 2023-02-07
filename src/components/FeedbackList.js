@@ -1,9 +1,12 @@
 import React from 'react'
 import FeedbackItem from './FeedbackItem'
-import { useState } from 'react'
+import { useState, useContext } from 'react'
+import FeedbackContext from '../context/FeedbackContext'
 
 
-const FeedbackList = ({ feedback, deleteItem, number }) => {
+const FeedbackList = ({ deleteItem, number }) => {
+
+    const { feedback } = useContext(FeedbackContext)
 
 
     const [reverse, setReverse] = useState('false')

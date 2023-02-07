@@ -8,13 +8,14 @@ import Stats from './components/Stats'
 import FeedbackForm from './components/FeedbackForm'
 import About from './pages/About'
 import AboutIconLink from './components/AboutIconLink'
+import { FeedbackProvider } from './context/FeedbackContext'
 
 const App = () => {
 
     const [feedback, setFeedback] = useState(FeedbackData)
     const [length, setLength] = useState(feedback.length)
 
-
+    // If selected id equals item id, delete the item
     const deleteItem = (id) => {
         setFeedback(feedback.filter((item) => {
             if (item.id !== id) {
@@ -24,41 +25,45 @@ const App = () => {
 
     }
 
+    // Gets length of feedback
     const number = () => {
         setLength(feedback.length - 1)
         console.log(length)
     }
 
+    // Appends entered feedback data to existing data
     const addFeedback = (newFeedback) => {
         newFeedback.id = 'id here'
         setFeedback([newFeedback, ...feedback])
     }
 
     return (
-        <Router>
+        <FeedbackProvider>
+            <Router>
 
-            <Header />
-            <div className='container'>
+                <Header />
+                <div className='container'>
 
-                <Routes>
-                    <Route
-                        exact path='/'
-                        element={
-                            <>
+                    <Routes>
+                        <Route
+                            exact path='/'
+                            element={
+                                <>
 
-                                <FeedbackForm handleAdd={addFeedback} />
-                                <Stats length={length} feedback={feedback} />
-                                <FeedbackList feedback={feedback} deleteItem={deleteItem} number={number} />
-                            </>
-                        }>
-                    </Route>
+                                    <FeedbackForm handleAdd={addFeedback} />
+                                    <Stats length={length} feedback={feedback} />
+                                    <FeedbackList deleteItem={deleteItem} number={number} />
+                                </>
+                            }>
+                        </Route>
 
-                    <Route path='/about' element={<About />} />
-                </Routes>
-                <AboutIconLink />
-            </div>
+                        <Route path='/about' element={<About />} />
+                    </Routes>
+                    <AboutIconLink />
+                </div>
 
-        </Router>
+            </Router>
+        </FeedbackProvider>
     )
 }
 

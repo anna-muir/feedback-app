@@ -1,4 +1,4 @@
-import { createContect, useState } from 'react'
+import { createContext, useState } from 'react'
 
 const FeedbackContext = createContext()
 
@@ -14,9 +14,10 @@ export const FeedbackProvider = ({ children }) => {
 
 
     return <FeedbackContext.Provider value={{
-
-
+        feedback,
     }}>
         {children}
     </FeedbackContext.Provider>
 }
+
+export default FeedbackContext
