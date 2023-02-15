@@ -8,36 +8,23 @@ import Stats from './components/Stats'
 import FeedbackForm from './components/FeedbackForm'
 import About from './pages/About'
 import AboutIconLink from './components/AboutIconLink'
+// Import FeedBackProvider to use it
 import { FeedbackProvider } from './context/FeedbackContext'
 
 const App = () => {
 
+    // You only need these states for number
     const [feedback, setFeedback] = useState(FeedbackData)
     const [length, setLength] = useState(feedback.length)
 
-    // If selected id equals item id, delete the item
-    const deleteItem = (id) => {
-        setFeedback(feedback.filter((item) => {
-            if (item.id !== id) {
-                return true
-            }
-        }))
-
-    }
-
-    // Gets length of feedback
+    // Minuses one from length of feedback each time clicked
     const number = () => {
         setLength(feedback.length - 1)
         console.log(length)
     }
 
-    // Appends entered feedback data to existing data
-    const addFeedback = (newFeedback) => {
-        newFeedback.id = 'id here'
-        setFeedback([newFeedback, ...feedback])
-    }
-
     return (
+        // Wrap FeedbackProvider around everything that you want to be included in children
         <FeedbackProvider>
             <Router>
 
@@ -50,9 +37,9 @@ const App = () => {
                             element={
                                 <>
 
-                                    <FeedbackForm handleAdd={addFeedback} />
-                                    <Stats length={length} feedback={feedback} />
-                                    <FeedbackList deleteItem={deleteItem} number={number} />
+                                    <FeedbackForm />
+                                    <Stats />
+                                    <FeedbackList number={number} />
                                 </>
                             }>
                         </Route>

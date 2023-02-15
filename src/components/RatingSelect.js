@@ -1,12 +1,26 @@
 import React from 'react'
-import { useState } from 'react'
+import { useState, useContext, useEffect } from 'react'
+import FeedbackContext from '../context/FeedbackContext'
+
+
 const RatingSelect = ({ select }) => {
     const [selected, setSelected] = useState(10)
 
+    const { feedbackEdit } = useContext(FeedbackContext)
+
+
+
     const handleChange = (e) => {
+        //By default e.currentTarget.value is a string but to change to a number use plus sign
         setSelected(+e.currentTarget.value)
+        // pass value into select function, which is being called in feedbackForm
         select(+e.currentTarget.value)
+        console.log(feedbackEdit.item.rating)
     }
+
+    useEffect(() => {
+        setSelected(feedbackEdit.item.rating)
+    }, [feedbackEdit])
     return (
 
         <ul className='rating'>
@@ -17,6 +31,7 @@ const RatingSelect = ({ select }) => {
                     name='rating'
                     value='1'
                     onChange={handleChange}
+                    // checked takes true or false so it's looking to see is selected is equal to that number
                     checked={selected === 1}
                 />
                 <label htmlFor='num1'>1</label>
