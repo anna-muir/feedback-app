@@ -14,7 +14,7 @@ import { FeedbackProvider } from './context/FeedbackContext'
 const App = () => {
 
     // You only need these states for number
-    const [feedback, setFeedback] = useState(FeedbackData)
+    const [feedback] = useState(FeedbackData)
     const [length, setLength] = useState(feedback.length)
 
     // Minuses one from length of feedback each time clicked

@@ -1,4 +1,3 @@
-
 const Header = ({ text, bgColor, textColor }) => {
 
     const headerStyles = {

@@ -12,3 +12,4 @@ const AboutIconLink = () => {
 }
 
 export default AboutIconLink
+
