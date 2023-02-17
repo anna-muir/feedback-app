@@ -1,4 +1,5 @@
-import { createContext, useState } from 'react'
+import { createContext, useState, useEffect } from 'react'
+// import { json } from 'react-router-dom'
 
 // Set a variable FeedbackContext to createContext to create context
 const FeedbackContext = createContext()
@@ -9,24 +10,9 @@ const FeedbackContext = createContext()
 export const FeedbackProvider = ({ children }) => {
 
 
-
-    const [feedback, setFeedback] = useState([
-        {
-            id: 1,
-            text: 'This is review one',
-            rating: 10
-        },
-        {
-            id: 2,
-            text: 'This is review two',
-            rating: 7
-        },
-        {
-            id: 3,
-            text: 'Review 3',
-            rating: 4
-        }
-    ])
+    // We made the initial state blank because we are prepping to
+    // use the backend for data.
+    const [feedback, setFeedback] = useState([])
 
     //Edit feedback state
     const [feedbackEdit, setFeedbackEdit] = useState({
@@ -34,33 +20,84 @@ export const FeedbackProvider = ({ children }) => {
         edit: false
     })
 
+    //Dependency array is blank because we want this feedback to load once when the page is loaded
+    // On page load, fetch feedback
+    useEffect(() => {
+        fetchFeedback();
+    }, [])
 
-    //Adds Feedback
-    const addFeedback = (newFeedback) => {
-        newFeedback.id = 'id here'
-        setFeedback([newFeedback, ...feedback])
+    //Fetch feedback
+    // Gets data from the server to put on client side
+    const fetchFeedback = async () => {
+        const response = await fetch('/feedback?_sort=id&_order=desc')
+        const data = await response.json()
+        setFeedback(data)
     }
 
-    // Deletes feedback
-    const deleteItem = (id) => {
+
+    //Adds Feedback
+    // posts new data to the server
+    const addFeedback = async (newFeedback) => {
+        const response = await fetch('/feedback', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(newFeedback),
+        })
+
+        const data = await response.json();
+
+        setFeedback([data, ...feedback])
+    }
+
+    const deleteItem = async (id) => {
+        const response = await fetch(`/feedback/${id}`, {
+            method: 'DELETE'
+        })
+        console.log(response)
+
         setFeedback(feedback.filter((item) => {
             if (item.id !== id) {
                 return true
-            }
-            else {
-                return false;
+            } else {
+                return false
             }
         }))
 
     }
+    // Deletes feedback
+    // const deleteItem = (id) => {
+    //     setFeedback(feedback.filter((item) => {
+    //         if (item.id !== id) {
+    //             return true
+    //         }
+    //         else {
+    //             return false;
+    //         }
+    //     }))
+
+    // }
+
+    const updateFeedback = async (id, updItem) => {
+        const response = await fetch('/feedback', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(updItem)
+        })
+        const data = await response.json();
+        setFeedback(feedback.map((item) => item.id === id ? { ...item, ...data } : item))
+    }
 
     //Update feedback item after edit
-    const updateFeedback = (id, updItem) => {
-        // console.log(id, updItem);
-        console.log('old array', feedback)
-        setFeedback(feedback.map((item) => item.id === id ? { ...item, ...updItem } : item))
-        console.log('new array', feedback)
-    }
+    // const updateFeedback = (id, updItem) => {
+    //     // console.log(id, updItem);
+    //     // console.log('old array', feedback)
+    //     setFeedback(feedback.map((item) => item.id === id ? { ...item, ...updItem } : item))
+    //     console.log('new array', updItem)
+    // }
 
     //Edit Feedback
     const editFeedback = (item) => {
